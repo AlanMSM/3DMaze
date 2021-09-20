@@ -12,11 +12,17 @@ function init(){
     scene.background= new THREE.Color(0xffffff);
     scene.fog = new THREE.Fog(0xffffff, 0, 500);
     scene.add(new THREE.GridHelper(10000,1000,0xff0000));
-    scene.add(new THREE.HemisphereLight(0xffffff));
+
+    const light = new THREE.DirectionalLight(0xffffff, 0.5);
+    light.position.set(50,30,50);
+    light.castShadow=false;
+    light.target=(object);
+    scene.add(light);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
-    camera.position.z = 10;
-    camera.position.y = 5;
+    camera.position.z = -40;
+    camera.position.x = -25;
+    camera.position.y = 7.5;
 
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(window.innerWidth,window.innerHeight);
@@ -32,6 +38,13 @@ function init(){
     document.getElementById('btnPlay').onclick = ()=>{
         pControl.lock()
     }
+
+    document.getElementById('btnRestart').onclick = ()=>{
+        camera.position.z = -40;
+        camera.position.x = -25;
+        camera.position.y = 7.5;
+    }
+
     document.addEventListener('keydown', (e)=>{
         switch (e.keyCode) {
             case 65:
@@ -70,11 +83,18 @@ function init(){
             case 40:
                 zdir=0
                 break;
+            case 32:
+                camera.position.y=camera.position.y+15
+                break;
+            case 17:
+                camera.position.y=camera.position.y-15
+                break;
+
         }
     })
 
     tiempoI = Date.now();
-    vel = 100;
+    vel = 40;
 
 
     animate();
@@ -98,10 +118,11 @@ let loader = new STLLoader();
 loader.load('/3dmodels/Maze.stl', (model)=>{
     object = new THREE.Mesh(
         model,
-        new THREE.MeshLambertMaterial({color:0x00ff00})
+        new THREE.MeshLambertMaterial({color:0xC39BD3})
     );
-    object.scale.set(0.1,0.1,0.1    );
-    object.position.set(0,0,0);
+    object.scale.set(10,10,10);
+    object.position.set(-8,-8,-8);
+    object.rotation.x=-Math.PI/2;
     init();
 });
 
